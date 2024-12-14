@@ -9,11 +9,13 @@
     ]
   },
   "exports": {
-    ".": "./src/mod.ts"
+    ".": "./src/mod.ts",
+    "./collect-ogp": "./examples/collect-ogp.ts"
   },
   "publish": {
     "include": [
       "src/**/*.ts",
+      "examples/**/*.ts",
       "LICENSE",
       "deno.json",
       "README.md"
