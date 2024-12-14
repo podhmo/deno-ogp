@@ -55,6 +55,9 @@ async function main() {
       const doc = parser.parseFromString(html, "text/html");
       const ogp = collectOGP(doc as unknown as Document); // hack: treat as lib.dom.d.ts Document
 
+      if (ogp.ogUrl === undefined) {
+        console.error("%cog:url is not found", "color: gray");
+      }
       // output
       if (options.debug) {
         console.log("%o", fillOGP(ogp, { url }));
