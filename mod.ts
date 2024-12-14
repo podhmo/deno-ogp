@@ -8,7 +8,7 @@ export function rawProperties(ogp: OGP): Record<string, string> {
 }
 
 /** Collect OGP data from  html text */
-export function collectOGP<T extends Document = Document>(doc: T): OGP {
+export function collect<T extends Document = Document>(doc: T): OGP {
   const ogp: UnknownOGP = { [raw]: {} };
   const props = ogp[raw];
 

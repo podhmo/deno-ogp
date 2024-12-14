@@ -2,7 +2,7 @@ import { DOMParser } from "jsr:@b-fuze/deno-dom@0.1.48";
 import { parseArgs } from "jsr:@podhmo/with-help@0.5.2";
 import { withTrace } from "jsr:@podhmo/build-fetch@0.1.0";
 
-import { collectOGP, fill, fill as fillOGP } from "../mod.ts";
+import { collect as collectOGP, fill as fillOGP } from "../mod.ts";
 
 const FETCH_TIMEOUT = 5000; // 5s
 
