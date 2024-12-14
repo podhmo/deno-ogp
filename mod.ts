@@ -2,6 +2,8 @@
 
 // todo: metadata https://ogp.me/#metadata
 
+const raw = Symbol("raw");
+
 /** Get raw properties, not typed */
 export function rawProperties(ogp: OGP): Record<string, string> {
   return ogp[raw];
@@ -40,10 +42,48 @@ export function collectOGP<T extends Document = Document>(doc: T): OGP {
   return { $kind: "partial", ...ogp } as PartialOGP;
 }
 
-// types
+/** Fetch and collect OGP data */
+export async function fetchOGP<T extends Document = Document>(
+  url: string,
+  options: {
+    getDocument: (html: string) => T;
+    fetch?: typeof globalThis.fetch;
+  } & Parameters<typeof globalThis.fetch>[1],
+): Promise<OGP> {
+  // todo: amazon support (generate from url)
 
-const raw = Symbol("raw");
-export type OGP = FullOGP | PartialOGP;
+  const fetch = options.fetch ?? globalThis.fetch;
+  const response = await fetch(url, {
+    signal: options.signal,
+    method: "GET",
+    headers: {
+      "User-Agent": "Deno",
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    return { "$kind": "broken", response, [raw]: {} };
+  }
+
+  const doc = options.getDocument(await response.text());
+  return collectOGP(doc);
+}
+
+////////////////////////////////////////
+// types
+////////////////////////////////////////
+
+export type OGP = FullOGP | PartialOGP | BrokenOGP;
+
+export type BrokenOGP = {
+  $kind: "broken";
+
+  response: Response; // status != 200
+  [raw]: {
+    [key: string]: string;
+  };
+};
 
 export type FullOGP = {
   $kind: "full";
