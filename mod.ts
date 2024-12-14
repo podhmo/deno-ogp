@@ -1,6 +1,13 @@
+/** Collect OGP data */
+
 // todo: metadata https://ogp.me/#metadata
 
-// Helper function to fetch OGP data
+/** Get raw properties, not typed */
+export function rawProperties(ogp: OGP): Record<string, string> {
+  return ogp[raw];
+}
+
+/** Collect OGP data from  html text */
 export function collectOGP<T extends Document = Document>(doc: T): OGP {
   const ogp: UnknownOGP = { [raw]: {} };
   const props = ogp[raw];
