@@ -11,3 +11,9 @@ $ deno add jsr:@podhmo/ogp
 ## how to use
 
 - [./examples/collect-ogp.ts](https://github.com/podhmo/deno-ogp/blob/main/examples/collect-ogp.ts)
+
+## run as cli
+
+```console
+$ deno run -A jsr:@podhmo/ogp/collect-ogp https://github.com/podhmo/deno-ogp
+```
