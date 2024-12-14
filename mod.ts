@@ -9,7 +9,7 @@ export function rawProperties(ogp: OGP): Record<string, string> {
 
 /** Collect OGP data from  html text */
 export function collect<T extends Document = Document>(doc: T): OGP {
-  const ogp: UnknownOGP = { [raw]: {} };
+  const ogp: PartialOGP = { $kind: "partial", [raw]: {} };
   const props = ogp[raw];
 
   // @ts-expect-error webbrowsers have this method
@@ -34,14 +34,25 @@ export function collect<T extends Document = Document>(doc: T): OGP {
     }
     props[name] = meta.getAttribute("content")!;
   }
-  if (ogp.ogImage !== undefined) {
-    return { $kind: "full", ...ogp } as FullOGP;
+  if (
+    ogp.ogTitle && ogp.ogImage && ogp.ogUrl && ogp.ogDescription &&
+    ogp.ogSiteName
+  ) {
+    return {
+      $kind: "full",
+      ogTitle: ogp.ogTitle,
+      ogImage: ogp.ogImage,
+      ogUrl: ogp.ogUrl,
+      ogDescription: ogp.ogDescription,
+      ogSiteName: ogp.ogSiteName,
+      [raw]: props,
+    };
   }
-  return { $kind: "partial", ...ogp } as PartialOGP;
+  return ogp;
 }
 
 /** Fill missing properties with empty string */
-export function fill(ogp: OGP): FullOGP {
+export function fill(ogp: OGP, options: { url?: string }): FullOGP {
   if (ogp.$kind === "full") {
     return ogp;
   }
@@ -50,7 +61,7 @@ export function fill(ogp: OGP): FullOGP {
     $kind: "full",
     ogTitle: ogp.ogTitle ?? "",
     ogSiteName: ogp.ogSiteName ?? "",
-    ogUrl: ogp.ogUrl ?? "",
+    ogUrl: ogp.ogUrl ?? (options.url ?? ""),
     ogDescription: ogp.ogDescription ?? "",
     ogImage: ogp.ogImage ?? "",
   };
@@ -63,15 +74,10 @@ export type OGP = FullOGP | PartialOGP;
 
 export type FullOGP = {
   $kind: "full";
-
-  ogImage: string;
-} & { [P in keyof UnknownOGP]-?: UnknownOGP[P] };
+} & { [P in keyof Omit<PartialOGP, "$kind">]-?: PartialOGP[P] };
 
 export type PartialOGP = {
   $kind: "partial";
-} & UnknownOGP;
-
-type UnknownOGP = {
   ogTitle?: string;
   ogSiteName?: string;
   ogUrl?: string;
