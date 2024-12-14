@@ -8,9 +8,10 @@ export function fill(ogp: OGP, options: { url?: string }): FullOGP {
 
   if (options.url !== undefined) {
     const url = options.url;
-    // for Amazon product page
     const u = new URL(url);
-    if (url.startsWith("https://www.amazon.") && url.includes("/dp/")) { // e.g. https://www.amazon.com/{description}/dp/{asin}/...
+
+    if (url.startsWith("https://www.amazon.") && url.includes("/dp/")) { // for Amazon product page
+      // e.g. https://www.amazon.com/{description}/dp/{asin}/...
       const parts = u.pathname.split("/dp/");
 
       const asin = parts[1].split("/")[0];
@@ -33,7 +34,8 @@ export function fill(ogp: OGP, options: { url?: string }): FullOGP {
       if (ogp.ogDescription === undefined) {
         ogp.ogDescription = description;
       }
-    } else { // e.g. https://example.com
+    } else {
+      // e.g. https://example.com
       if (ogp.ogUrl === undefined) {
         ogp.ogUrl = url;
       }
