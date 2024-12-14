@@ -11,13 +11,14 @@
   "exports": {
     ".": "./src/mod.ts"
   },
-  "includes": [
-    "src/**/*.ts",
-    "LICENSE",
-    "deno.json",
-    "deno.lock",
-    "README.md"
-  ],
+  "publish": {
+    "include": [
+      "src/**/*.ts",
+      "LICENSE",
+      "deno.json",
+      "README.md"
+    ]
+  },
   "tasks": {
     "ok": "deno check src/**/*.ts && deno test && deno fmt --check && deno lint src",
     "run:example": "deno run -A ./exmaples/collect-ogp.ts https://github.com/podhmo/deno-ogp",
