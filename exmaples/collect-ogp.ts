@@ -1,10 +1,15 @@
 import { DOMParser } from "jsr:@b-fuze/deno-dom@0.1.48";
 import { parseArgs } from "jsr:@podhmo/with-help@0.5.2";
-import { withTrace } from "jsr:@podhmo/build-fetch@0.1.0";
 
-import { collectOGP } from "../mod.ts";
+import { fetchOGP } from "../mod.ts";
 
 const FETCH_TIMEOUT = 5000; // 5s
+
+const getDocument = (html: string) =>
+  new DOMParser().parseFromString(
+    html,
+    "text/html",
+  ) as unknown as Document; // hack: treat as lib.dom.d.ts Document
 
 async function main() {
   const options = parseArgs(Deno.args, {
@@ -16,8 +21,6 @@ async function main() {
     },
   });
 
-  const fetch = options.debug ? withTrace(globalThis.fetch) : globalThis.fetch;
-
   for (const url of options._) {
     const ac = new AbortController();
     const timeout = setTimeout(() => ac.abort(), FETCH_TIMEOUT);
@@ -25,34 +28,45 @@ async function main() {
     try {
       console.debug(`%cfetch %c${url}`, "color: blue", "color: white");
       const startTime = performance.now();
-      const response = await fetch(url, {
+
+      // collect ogp
+      const ogp = await fetchOGP(url, {
+        getDocument,
         signal: ac.signal,
-        method: "GET",
-        headers: {
-          "User-Agent": "Deno",
-        },
       });
-      const endTime = performance.now();
-      console.debug(
-        `%cdone  %c${url} ${endTime - startTime}ms`,
-        "color: green",
-        "color: white",
-      );
 
-      const html = await response.text();
+      switch (ogp.$kind) {
+        case "partial":
+          console.warn(`%cpartial %c${url}`, "color: orange", "color: white");
+          /* falls through */
+        case "full": {
+          const endTime = performance.now();
+          console.debug(
+            `%cdone  %c${url} ${endTime - startTime}ms`,
+            "color: green",
+            "color: white",
+          );
 
-      if (options.save) {
-        await Deno.writeTextFile(options.save, html);
-        console.debug("saved to %s", options.save);
+          // output
+          console.log(JSON.stringify(ogp, null, 2)); // console.log("%o", ogp);
+          break;
+        }
+        case "broken": {
+          const res = ogp.response;
+          console.error(
+            `!! %c${url} %c${res.status} %c${res.statusText}`,
+            "color: red",
+            "color: white",
+            "color: red",
+          );
+          console.error(await res.text());
+          break;
+        }
+        default: {
+          const _: never = ogp;
+          throw new Error("unreachable");
+        }
       }
-
-      // collect OGP data
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const ogp = collectOGP(doc as unknown as Document); // hack: treat as lib.dom.d.ts Document
-
-      // output
-      console.log(JSON.stringify(ogp, null, 2)); // console.log("%o", ogp);
     } catch (e) {
       console.error("!! %o", e);
     } finally {
