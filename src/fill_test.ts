@@ -12,8 +12,6 @@ function newEmptyOGP(): OGP {
 function normalize(ogp: object): Record<string, unknown> {
   const ob: Record<string, unknown> & { $kind?: string; [raw]?: string } = {
     ...ogp,
-    $kind: "",
-    [raw]: "",
   };
   delete ob[raw];
   delete ob["$kind"];
