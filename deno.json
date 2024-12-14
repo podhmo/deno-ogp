@@ -10,6 +10,7 @@
     ".": "./src/mod.ts"
   },
   "tasks": {
+    "ok": "deno test && deno fmt --check && deno lint src",
     "run:example": "deno run -A ./exmaples/collect-ogp.ts https://github.com/podhmo/deno-ogp",
     "build": "esbuild --bundle --tsconfig=deno.json --outfile=dist/index.mjs --sourcemap mod.ts"
   }
