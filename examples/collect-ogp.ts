@@ -27,7 +27,7 @@ async function main() {
     const timeout = setTimeout(() => ac.abort(), FETCH_TIMEOUT);
 
     try {
-      console.debug(`%cfetch %c${url}`, "color: blue", "color: white");
+      console.error(`%cfetch %c${url}`, "color: blue", "color: white");
       const startTime = performance.now();
       const response = await fetch(url, {
         signal: ac.signal,
@@ -37,7 +37,7 @@ async function main() {
         },
       });
       const endTime = performance.now();
-      console.debug(
+      console.error(
         `%cdone  %c${url} ${endTime - startTime}ms`,
         "color: green",
         "color: white",
