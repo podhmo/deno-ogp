@@ -1,0 +1,16 @@
+{
+  "name": "@podhmo/ogp",
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "deno.ns"
+    ]
+  },
+  "exports": {
+    ".": "./mod.ts"
+  },
+  "tasks": {
+    "run:example": "deno run -A ./exmaples/collect-ogp.ts https://github.com/podhmo/deno-ogp",
+    "build": "esbuild --bundle --tsconfig=deno.json --outfile=dist/index.mjs --sourcemap mod.ts"
+  }
+}
