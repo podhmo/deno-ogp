@@ -1,0 +1,26 @@
+{
+  "version": "4",
+  "specifiers": {
+    "jsr:@b-fuze/deno-dom@0.1.48": "0.1.48",
+    "jsr:@podhmo/build-fetch@0.1.0": "0.1.0",
+    "jsr:@podhmo/with-help@0.5.2": "0.5.2",
+    "jsr:@std/cli@1": "1.0.8"
+  },
+  "jsr": {
+    "@b-fuze/deno-dom@0.1.48": {
+      "integrity": "bf5b591aef2e9e9c59adfcbb93a9ecd45bab5b7c8263625beafa5c8f1662e7da"
+    },
+    "@podhmo/build-fetch@0.1.0": {
+      "integrity": "7be3a097d1ebfaad743040cab77c8fdd0072781ea0ec1cc64e0bc5096f574a2a"
+    },
+    "@podhmo/with-help@0.5.2": {
+      "integrity": "2fa7b2f1bcaa5da0d3c02a94c96f0eb13ca3b579b64f440a1e2b12a492681685",
+      "dependencies": [
+        "jsr:@std/cli"
+      ]
+    },
+    "@std/cli@1.0.8": {
+      "integrity": "3762d8dc9a373715c08d871c38d45e637b25266f013a1d0bbe560bca409de94e"
+    }
+  }
+}
