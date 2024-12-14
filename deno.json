@@ -7,7 +7,7 @@
     ]
   },
   "exports": {
-    ".": "./mod.ts"
+    ".": "./src/mod.ts"
   },
   "tasks": {
     "run:example": "deno run -A ./exmaples/collect-ogp.ts https://github.com/podhmo/deno-ogp",
