@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- style -->
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+
+<body>
+    <main class="container">
+        <h1>fetch ogp</h1>
+        <form>
+            <input value="https://ogp.me"></input>
+            <button type="submit">fetch</button>
+        </form>
+        result:
+        <pre style="padding:1rem;"></pre>
+        <section id="image"></section>
+    </main>
+    <script type="module">
+        import { collect as collectOGP, fill as fillOGP } from 'https://esm.sh/jsr/@podhmo/ogp';
+        const parser = new DOMParser();
+
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = e.target.querySelector('input').value;
+            // disabled
+            e.target.querySelector('button').disabled = true;
+
+            const ac = new AbortController();
+            const timeout = setTimeout(() => ac.abort(), 5000); // 5s
+            try {
+                const res = await fetch(url,
+                    {
+                        signal: ac.signal,
+                        mode: "cors",
+                        cache: "no-store", redirect: "follow",
+                        method: "GET",
+                        headers: {
+                            "Accept": "text/html",
+                        },
+                    });
+                // if(!res.ok) {
+                //     throw new Error(`fetch failed: ${res.status} ${res.statusText}\n ${await res.text()}`);
+                // }
+                const html = await res.text();
+                console.log(html);
+                const dom = parser.parseFromString(html, 'text/html')
+                const ogp = fillOGP(collectOGP(dom), { url });
+
+                // output
+                const el = document.querySelector('pre')
+                el.textContent = JSON.stringify(ogp, null, 2);
+                el.style.backgroundColor = '#f8f8f8';
+                if (ogp.ogImage) {
+                    const img = document.createElement('img');
+                    img.src = ogp.ogImage;
+                    // alt?
+                    document.querySelector("#image").appendChild(img);
+                }
+            } catch (e) {
+                const el = document.querySelector('pre')
+                el.textContent = e.toString();
+                el.style.backgroundColor = '#fcc';
+                throw e;
+            } finally {
+                ac.abort();
+                e.target.querySelector('button').disabled = false; // todo: use abort signal
+            }
+        });
+    </script>
+</body>
+
+</html>
