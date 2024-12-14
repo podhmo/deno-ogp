@@ -52,7 +52,9 @@ async function main() {
       const ogp = collectOGP(doc as unknown as Document); // hack: treat as lib.dom.d.ts Document
 
       // output
-      console.log(JSON.stringify(fillOGP(ogp), null, 2)); // console.log("%o", ogp);
+      // console.log("%o", ogp);
+      // console.log(JSON.stringify(ogp, null, 2));
+      console.log(JSON.stringify(fillOGP(ogp, { url }), null, 2));
     } catch (e) {
       console.error("!! %o", e);
     } finally {
