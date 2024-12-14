@@ -11,6 +11,9 @@ async function main() {
     name: "ogp",
     string: ["save"],
     boolean: ["debug"],
+    envvar: {
+      debug: "DEBUG",
+    },
   });
 
   const fetch = options.debug ? withTrace(globalThis.fetch) : globalThis.fetch;
@@ -22,7 +25,13 @@ async function main() {
     try {
       console.debug(`%cfetch %c${url}`, "color: blue", "color: white");
       const startTime = performance.now();
-      const response = await fetch(url, { signal: ac.signal });
+      const response = await fetch(url, {
+        signal: ac.signal,
+        method: "GET",
+        headers: {
+          "User-Agent": "Deno",
+        },
+      });
       const endTime = performance.now();
       console.debug(
         `%cdone  %c${url} ${endTime - startTime}ms`,
