@@ -3,6 +3,7 @@ import { parseArgs } from "jsr:@podhmo/with-help@0.5.2";
 import { withTrace } from "jsr:@podhmo/build-fetch@0.1.0";
 
 import { collect as collectOGP, fill as fillOGP } from "../src/mod.ts";
+// import { collect as collectOGP, fill as fillOGP } from "jsr:@podhmo/ogp";
 
 const FETCH_TIMEOUT = 5000; // 5s
 
