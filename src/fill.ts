@@ -5,10 +5,12 @@ export function fill(ogp: OGP, options: { url?: string }): FullOGP {
   if (ogp.$kind === "full") {
     return ogp;
   }
+
   return {
     ...ogp,
     $kind: "full",
     ogTitle: ogp.ogTitle ?? "",
+    ogType: ogp.ogType ?? "",
     ogSiteName: ogp.ogSiteName ?? "",
     ogUrl: ogp.ogUrl ?? (options.url ?? ""),
     ogDescription: ogp.ogDescription ?? "",
