@@ -13,28 +13,32 @@ export function collect<T extends Document = Document>(doc: T): OGP {
       case "og:title":
         ogp.ogTitle = meta.getAttribute("content")!;
         break;
-      case "og:image":
-        ogp.ogImage = meta.getAttribute("content")!;
+      case "og:type":
+        ogp.ogType = meta.getAttribute("content")!;
         break;
       case "og:url":
         ogp.ogUrl = meta.getAttribute("content")!;
         break;
-      case "og:description":
-        ogp.ogDescription = meta.getAttribute("content")!;
+      case "og:image":
+        ogp.ogImage = meta.getAttribute("content")!;
         break;
       case "og:site_name":
         ogp.ogSiteName = meta.getAttribute("content")!;
+        break;
+      case "og:description":
+        ogp.ogDescription = meta.getAttribute("content")!;
         break;
     }
     props[name] = meta.getAttribute("content")!;
   }
   if (
-    ogp.ogTitle && ogp.ogImage && ogp.ogUrl && ogp.ogDescription &&
-    ogp.ogSiteName
+    ogp.ogTitle && ogp.ogType && ogp.ogUrl && ogp.ogImage &&
+    ogp.ogSiteName && ogp.ogDescription
   ) {
     return {
       $kind: "full",
       ogTitle: ogp.ogTitle,
+      ogType: ogp.ogType,
       ogImage: ogp.ogImage,
       ogUrl: ogp.ogUrl,
       ogDescription: ogp.ogDescription,
