@@ -40,6 +40,22 @@ export function collectOGP<T extends Document = Document>(doc: T): OGP {
   return { $kind: "partial", ...ogp } as PartialOGP;
 }
 
+/** Fill missing properties with empty string */
+export function fill(ogp: OGP): FullOGP {
+  if (ogp.$kind === "full") {
+    return ogp;
+  }
+  return {
+    ...ogp,
+    $kind: "full",
+    ogTitle: ogp.ogTitle ?? "",
+    ogSiteName: ogp.ogSiteName ?? "",
+    ogUrl: ogp.ogUrl ?? "",
+    ogDescription: ogp.ogDescription ?? "",
+    ogImage: ogp.ogImage ?? "",
+  };
+}
+
 // types
 
 const raw = Symbol("raw");
@@ -53,7 +69,7 @@ export type FullOGP = {
 
 export type PartialOGP = {
   $kind: "partial";
-} & { [P in keyof Omit<UnknownOGP, "ogImage">]-?: UnknownOGP[P] };
+} & UnknownOGP;
 
 type UnknownOGP = {
   ogTitle?: string;
