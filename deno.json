@@ -11,8 +11,9 @@
   "exports": {
     ".": "./src/mod.ts"
   },
-  "include": [
+  "includes": [
     "src/**/*.ts",
+    "LICENSE",
     "deno.json",
     "deno.lock",
     "README.md"
