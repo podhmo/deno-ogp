@@ -1,5 +1,7 @@
 {
   "name": "@podhmo/ogp",
+  "version": "0.1.0",
+  "license": "MIT",
   "compilerOptions": {
     "lib": [
       "dom",
@@ -9,6 +11,12 @@
   "exports": {
     ".": "./src/mod.ts"
   },
+  "include": [
+    "src/**/*.ts",
+    "deno.json",
+    "deno.lock",
+    "README.md"
+  ],
   "tasks": {
     "ok": "deno check src/**/*.ts && deno test && deno fmt --check && deno lint src",
     "run:example": "deno run -A ./exmaples/collect-ogp.ts https://github.com/podhmo/deno-ogp",
