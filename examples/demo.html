@@ -30,22 +30,42 @@
             const url = e.target.querySelector("input").value;
             e.target.querySelector("button").disabled = true;
             try {
-                const iframe = document.createElement('iframe');
-                iframe.src = url;
-                iframe.setAttribute('sandbox', 'allow-scripts');
-                iframe.width = '600';
-                iframe.height = '400';
-                iframe.style.border = 'none';
-                iframe.addEventListener("load", async () => {
-                    const ogp = collectOGP(iframe);
+                const child = window.open(url, "mozillaWindow", "popup,left=100,top=100,width=600,height=400");
+                child.addEventListener("load", async () => {
+                    const ogp = collectOGP(child.document);
                     const el = document.querySelector('pre')
                     el.textContent = JSON.stringify(ogp, null, 2);
-                })
-                document.querySelector("main").appendChild(iframe);
+                    child.close();
+                }, {once: true})
             } finally {
                 e.target.querySelector("button").disabled = false;
             }
         })
+
+
+        /*
+                document.querySelector("form").addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const url = e.target.querySelector("input").value;
+                    e.target.querySelector("button").disabled = true;
+                    try {
+                        const iframe = document.createElement('iframe');
+                        iframe.src = url;
+                        iframe.setAttribute('sandbox', 'allow-scripts');
+                        iframe.width = '600';
+                        iframe.height = '400';
+                        iframe.style.border = 'none';
+                        iframe.addEventListener("load", async () => {
+                            const ogp = collectOGP(iframe);
+                            const el = document.querySelector('pre')
+                            el.textContent = JSON.stringify(ogp, null, 2);
+                        })
+                        document.querySelector("main").appendChild(iframe);
+                    } finally {
+                        e.target.querySelector("button").disabled = false;
+                    }
+                })
+        */
 
         /*
                 document.querySelector('form').addEventListener('submit', async (e) => {
